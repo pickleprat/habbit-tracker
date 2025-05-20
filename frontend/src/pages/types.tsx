@@ -3,7 +3,7 @@
  */
 export interface Hobby {
   /** Unique identifier (ObjectId string) */
-  id: string;
+  id?: string;
   /** Title of the hobby */
   title: string;
   /** Category for grouping hobbies */

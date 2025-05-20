@@ -14,10 +14,19 @@ const Hobbies: React.FC = () => {
 
   // Simulate fetching hobbies
   useEffect(() => {
-    setHobbies([
-      { id: '1', title: 'Photography', category: 'Art', description: 'Capturing moments', createdAt: '2025-05-01T00:00:00Z' },
-      { id: '2', title: 'Running', category: 'Fitness', description: 'Morning marathons', createdAt: '2025-04-15T00:00:00Z' },
-    ]);
+   const fetchData = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/hobby/view", {
+          method: "GET",
+        });
+        const data = await res.json();
+        setHobbies(data);  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,12 +47,12 @@ const Hobbies: React.FC = () => {
     setForm({ title: '', category: '', description: '' });
   };
 
-  const handleEdit = (id: string) => {
+  const handleEdit = (id: string | undefined) => {
     // open edit modal or inline editing
     console.log('Edit hobby', id);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string | undefined) => {
     setHobbies(prev => prev.filter(h => h.id !== id));
   };
 
