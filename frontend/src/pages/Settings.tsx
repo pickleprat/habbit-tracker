@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
+  Card, CardContent, CardDescription, CardHeader, CardTitle,
 } from '../components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '../components/ui/form';
 import { Input } from '../components/ui/input';
@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import { useForm } from 'react-hook-form';
-import { User, ShieldCheck, Moon, Bell, Trash2 } from 'lucide-react';
+import { User, ShieldCheck, Bell, Trash2 } from 'lucide-react';
 
 interface SettingsFormValues {
   email: string;

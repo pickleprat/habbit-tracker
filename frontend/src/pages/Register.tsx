@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -19,42 +18,93 @@ import {
 } from '../components/ui/form';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
+import { Alert, AlertTitle, AlertDescription } from '../components/ui/alert';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
-import { User as UserIcon, Lock, Phone, MapPin, CheckCircle } from 'lucide-react';
+import { User as UserIcon, Lock, Phone, MapPin, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import type { User } from "./types"; 
 
 interface RegisterFormValues {
-  userName: string;
-  password: string;
-  zipCode: string;
-  countryCode: string;
-  phoneNumber: string;
-  city: string;
-  address: string;
-  firstName: string;
-  lastName: string;
-  middleName?: string;
+  userName: string | undefined;
+  password: string | undefined;
+  zipCode: string | undefined;
+  countryCode: string | undefined;
+  phoneNumber: string | undefined;
+  city: string | undefined;
+  address: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  middleName?: string | undefined;
 }
 
+type StatusType = 'idle' | 'loading' | 'success' | 'error';
+
 const Register: React.FC = () => {
+  const [createdUser, setCreatedUser] = useState<User | null>(null);
+  const [status, setStatus] = useState<StatusType>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  
   const form = useForm<RegisterFormValues>({
     defaultValues: {
-      userName: '',
-      password: '',
-      zipCode: '',
-      countryCode: '',
-      phoneNumber: '',
-      city: '',
-      address: '',
-      firstName: '',
-      lastName: '',
-      middleName: '',
+      userName: undefined,
+      password: undefined,
+      zipCode: undefined,
+      countryCode: undefined,
+      phoneNumber: undefined,
+      city: undefined,
+      address: undefined,
+      firstName: undefined,
+      lastName: undefined,
+      middleName: undefined,
     },
   });
 
   const onSubmit = (data: RegisterFormValues) => {
-    console.log('Registration data:', data);
-    // TODO: call API to register user
+    setStatus('loading');
+    setErrorMessage('');
+    
+    const createUser = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/users/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        const resJson = await res.json();
+        
+        if (!res.ok) {
+          // Check for specific error codes or messages
+          if (res.status === 409 || resJson.message?.includes('already exists')) {
+            throw new Error('User already exists');
+          } else {
+            throw new Error(resJson.message || `HTTP error! status: ${res.status}`);
+          }
+        }
+
+        console.log(resJson); 
+        setCreatedUser(resJson); // ✅ Set the user in state
+        setStatus('success');
+        
+        // Optional: Clear form after successful submission
+        // form.reset();
+      } catch (e) {
+        console.error("Failed to create user:", e);
+        setStatus('error');
+        
+        // Set appropriate error message
+        if (e instanceof Error) {
+          setErrorMessage('User already exists. Please choose a different username.');
+        } else {
+          setErrorMessage('Failed to create user. Please try again.');
+        }
+      }
+    };
+
+    createUser();
   };
 
   return (
@@ -84,6 +134,7 @@ const Register: React.FC = () => {
                   <FormField
                     control={form.control}
                     name="firstName"
+                    rules={{ required: "First name is required" }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">First Name</FormLabel>
@@ -97,11 +148,12 @@ const Register: React.FC = () => {
                   <FormField
                     control={form.control}
                     name="lastName"
+                    rules={{ required: "Last name is required" }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">Last Name</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Doe" className="focus:border-green-500" />
+                          <Input {...field} placeholder="Lark" className="focus:border-green-500" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -123,11 +175,12 @@ const Register: React.FC = () => {
                   <FormField
                     control={form.control}
                     name="userName"
+                    rules={{ required: "User name is required" }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">Username</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="johndoe123" className="focus:border-green-500" />
+                          <Input {...field} placeholder="larklordjohn" className="focus:border-green-500" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -154,6 +207,7 @@ const Register: React.FC = () => {
                       <FormLabel className="text-gray-700">Password</FormLabel>
                       <FormControl>
                         <Input
+                          required
                           type="password"
                           {...field}
                           placeholder="••••••••"
@@ -185,7 +239,7 @@ const Register: React.FC = () => {
                       <FormItem>
                         <FormLabel className="text-gray-700">Phone Number</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="(555) 123-4567" className="focus:border-green-500" />
+                          <Input required {...field} placeholder="123 456 7890" className="focus:border-green-500" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -198,7 +252,7 @@ const Register: React.FC = () => {
                       <FormItem>
                         <FormLabel className="text-gray-700">Country Code</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="US" className="focus:border-green-500" />
+                          <Input required {...field} placeholder="+91" className="focus:border-green-500" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -225,7 +279,7 @@ const Register: React.FC = () => {
                       <FormItem>
                         <FormLabel className="text-gray-700">Street Address</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="123 Main St" className="focus:border-green-500" />
+                          <Input required {...field} placeholder="123 Gandhi Rd" className="focus:border-green-500" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -240,7 +294,7 @@ const Register: React.FC = () => {
                         <FormItem>
                           <FormLabel className="text-gray-700">City</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="New York" className="focus:border-green-500" />
+                            <Input required {...field} placeholder="Mumbai" className="focus:border-green-500" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -253,7 +307,7 @@ const Register: React.FC = () => {
                         <FormItem>
                           <FormLabel className="text-gray-700">ZIP Code</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="10001" className="focus:border-green-500" />
+                            <Input required {...field} placeholder="10001" className="focus:border-green-500" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -268,14 +322,50 @@ const Register: React.FC = () => {
                 <Button 
                   type="submit" 
                   className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 flex items-center gap-2"
+                  disabled={status === 'loading'}
                 >
-                  <span>Create Account</span>
-                  <CheckCircle className="w-5 h-5" />
+                  {status === 'loading' ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Creating Account...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Create Account</span>
+                      <CheckCircle className="w-5 h-5" />
+                    </>
+                  )}
                 </Button>
               </CardFooter>
+
+
             </form>
           </Form>
         </Card>
+
+        {/* Status messages */}
+        {status === 'success' && (
+          <Alert className="mb-6 bg-green-50 border border-green-200 text-green-800">
+            <CheckCircle className="h-5 w-5 text-green-600" />
+            <AlertTitle className="text-green-800 font-medium">Success!</AlertTitle>
+            <AlertDescription className="text-green-700">
+              Your account has been created successfully.
+              {createdUser?.userName && (
+                <span className="font-semibold"> Welcome, {createdUser.userName}!</span>
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {status === 'error' && (
+          <Alert className="mb-6 bg-red-50 border border-red-200 text-red-800">
+            <AlertCircle className="h-5 w-5 text-red-600" />
+            <AlertTitle className="text-red-800 font-medium">Error</AlertTitle>
+            <AlertDescription className="text-red-700">
+              {errorMessage}
+            </AlertDescription>
+          </Alert>
+        )}
       </main>
 
       <Navbar />

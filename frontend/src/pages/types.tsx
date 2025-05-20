@@ -21,7 +21,7 @@ export interface Hobby {
  */
 export interface Goal {
   /** Unique identifier (ObjectId string) */
-  id: string;
+  id?: string;
   /** Objective description */
   objective: string;
   /** Period unit in ISO 8601 duration format (e.g., 'P1M') */
@@ -58,6 +58,22 @@ export interface Task {
   updatedAt?: string;
   /** Goal ID (reference) */
   goalId?: string;
+}
+
+export interface User {
+  id: string | undefined;
+  userName: string | undefined;
+  password: string | undefined;
+  zipCode: string | undefined;
+  countryCode: string | undefined;
+  phoneNumber: string | undefined;
+  city: string | undefined;
+  address: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  middleName: string | undefined;
+  created_at: string | undefined;
+  updated_at: string | undefined;
 }
 
 export type Period = 'Hour' | 'Day' | 'Week' | 'Month' | 'Year';

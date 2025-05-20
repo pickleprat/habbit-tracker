@@ -10,24 +10,10 @@ import {
   CardTitle,
   CardDescription,
 } from '../components/ui/card';
-import { Input } from '../components/ui/input';
-import { Button } from '../components/ui/button';
 import {
   Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
 } from '../components/ui/form';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '../components/ui/select';
-import { PlusCircle, List, CheckCircle, Edit, Trash2 } from 'lucide-react';
+import { List, CheckCircle  } from 'lucide-react';
 import type { Hobby, Goal, Task, Period } from './types';
 
 interface GoalFormValues {

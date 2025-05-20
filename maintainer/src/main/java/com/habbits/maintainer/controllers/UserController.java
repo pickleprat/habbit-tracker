@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/users")
 public class UserController {
     @Autowired private UserService userService;
@@ -33,15 +34,15 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Boolean> create(@RequestBody User user) {
+    public ResponseEntity<User> create(@RequestBody User user) {
         user.setCreated_at(LocalDateTime.now());
         user.setUpdated_at(null);
         boolean exists = userNameExists(user.getUserName());
         if(!exists) {
             userService.create(user);
-            return new ResponseEntity<>(true, HttpStatus.CREATED);
+            return new ResponseEntity(user, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(false, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @GetMapping("/view")

@@ -18,8 +18,6 @@ function App() : JSX.Element {
         <Route path="/profile" element={<Hobbies/>}/> 
         <Route path="/settings" element={<Settings/>}/> 
         <Route path="/tasks/:hobbyId" element={<TaskPage />} />
-        {/* <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} /> */}
       </Routes>
     </Router>
     </>
