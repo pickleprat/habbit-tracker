@@ -24,6 +24,7 @@ import Navbar from '../components/Navbar';
 import { User as UserIcon, Lock, Phone, MapPin, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import type { User } from "./types"; 
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterFormValues {
   userName: string | undefined;
@@ -44,6 +45,7 @@ const Register: React.FC = () => {
   const [createdUser, setCreatedUser] = useState<User | null>(null);
   const [status, setStatus] = useState<StatusType>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const navigate = useNavigate(); 
   
   const form = useForm<RegisterFormValues>({
     defaultValues: {
@@ -88,6 +90,7 @@ const Register: React.FC = () => {
         console.log(resJson); 
         setCreatedUser(resJson); // ✅ Set the user in state
         setStatus('success');
+        navigate("/profile"); 
         
         // Optional: Clear form after successful submission
         // form.reset();
