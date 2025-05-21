@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Document(collection = "goals")
 public class Goal {
-    @Id private ObjectId id;
+    @Id private String id;
     @NonNull private String objective;
     @NonNull private Period unit;
     private int steps;
@@ -21,3 +21,5 @@ public class Goal {
     @DBRef private User user;
     @DBRef private Hobby hobby;
 }
+
+

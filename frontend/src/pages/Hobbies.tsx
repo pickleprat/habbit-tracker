@@ -111,15 +111,13 @@ const GoalFirstFlow: React.FC = () => {
     
     // Add goal to collection
     setGoals(prev => [...prev, finalGoal]);
+    console.log(goals); 
     
     // Reset the flow
     resetFlow();
-    
-    // Set the selected hobby
     setSelectedHobby(hobby);
   };
 
-  // Create a new hobby instead of using suggestions
   const handleCreateNewHobby = () => {
     setCreateNewHobby(true);
     setFlowStep('hobby-creation');
@@ -163,7 +161,7 @@ const GoalFirstFlow: React.FC = () => {
     setCreateNewHobby(false);
     setGoalForm({
       objective: '',
-      unit: 'WEEKLY',
+      unit: 'WEEK',
       steps: 1
     });
     setHobbyForm({
