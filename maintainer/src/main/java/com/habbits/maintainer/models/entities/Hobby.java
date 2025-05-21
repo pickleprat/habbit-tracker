@@ -1,5 +1,8 @@
 package com.habbits.maintainer.models.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.habbits.maintainer.models.entities.config.ObjectConfig;
 import lombok.Data;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -16,6 +19,8 @@ import java.time.LocalDateTime;
 @Data
 @Document(collection="hobbys")
 public class Hobby {
+    @JsonSerialize(using = ObjectConfig.ObjectSerializerId.class)
+    @JsonDeserialize(using = ObjectConfig.ObjectDeserializerId.class)
     @Id private ObjectId id;
     @Indexed(unique = true) private String title;
     @NonNull private String category;

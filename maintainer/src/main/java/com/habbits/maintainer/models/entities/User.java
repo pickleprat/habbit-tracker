@@ -1,5 +1,8 @@
 package com.habbits.maintainer.models.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.habbits.maintainer.models.entities.config.ObjectConfig;
 import lombok.Data;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -15,6 +18,8 @@ public class User {
     // no gender because we here do not support sexism
     // and totally not because I forgot and now it will be too much work
     // to change it or anything.
+    @JsonSerialize(using = ObjectConfig.ObjectSerializerId.class)
+    @JsonDeserialize(using = ObjectConfig.ObjectDeserializerId.class)
     @Id private ObjectId id;
     @Indexed(unique = true) @NonNull private String userName;
     @NonNull private String password;

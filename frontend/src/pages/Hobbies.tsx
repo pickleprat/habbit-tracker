@@ -69,6 +69,7 @@ const GoalFirstFlow: React.FC = () => {
       objective: goalForm.objective,
       unit: goalForm.unit,
       steps: goalForm.steps,
+      userId: "6825b20bb332e4232838db20"
     };
     
     // Store the goal temporarily (not in DB yet)
@@ -106,12 +107,12 @@ const GoalFirstFlow: React.FC = () => {
     // Complete the goal with the selected hobby
     const finalGoal: Goal = {
       ...currentGoal,
-      hobbyId: hobby.id
+      hobbyId: hobby.id, 
+      userId: "6825b20bb332e4232838db20"
     };
     
     // Add goal to collection
     setGoals(prev => [...prev, finalGoal]);
-    console.log(goals); 
     
     // Reset the flow
     resetFlow();
@@ -141,7 +142,8 @@ const GoalFirstFlow: React.FC = () => {
     // Complete the goal with the new hobby
     const finalGoal: Goal = {
       ...currentGoal,
-      hobbyId: newHobby.id
+      hobbyId: newHobby.id, 
+      userId: "6825b20bb332e4232838db20"
     };
     
     // Add goal to collection
@@ -196,6 +198,7 @@ const GoalFirstFlow: React.FC = () => {
   // Handle saving both hobby and goal to database
   const handleSaveToDatabase = async () => {
     if (!selectedHobby || !goals.find(g => g.hobbyId === selectedHobby.id)) return;
+    console.log(goals); 
     
     try {
       setStatusMessage({ type: 'success', text: 'Successfully saved your hobby and goal!' });
